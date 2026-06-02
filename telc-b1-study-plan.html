@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>telc B1 — 6-Month Study Plan</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0e0e14;
+      --bg2: #16161f;
+      --bg3: #1e1e2a;
+      --gold: #f5c518;
+      --orange: #e8734a;
+      --text: #e8e6f0;
+      --muted: #7a7894;
+      --border: #252533;
+      --green: #5eead4;
+      --blue: #93c5fd;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; font-size: 15px; line-height: 1.6; }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #0e0e14 0%, #16152a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 30px 24px 26px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 200px;
+      background: radial-gradient(ellipse, rgba(245,197,24,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-tag {
+      display: inline-block;
+      background: rgba(245,197,24,0.1);
+      border: 1px solid rgba(245,197,24,0.25);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .header h1 { font-family: 'DM Serif Display', serif; font-size: 30px; font-weight: normal; margin-bottom: 8px; }
+    .header h1 span { color: var(--gold); }
+    .header-meta { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
+    .header-meta-item { font-size: 12px; color: var(--muted); }
+    .header-meta-item strong { color: var(--text); font-weight: 700; }
+
+    /* TABS */
+    .tabs-wrapper { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 12px; overflow-x: auto; }
+    .tabs { display: inline-flex; }
+    .tab-btn {
+      padding: 13px 16px; background: none; border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted); font-family: 'Nunito', sans-serif;
+      font-size: 12.5px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap; letter-spacing: 0.3px;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .tab-phase { font-size: 9px; display: block; opacity: 0.55; font-weight: 400; letter-spacing: 0; }
+
+    /* CONTENT */
+    .content { max-width: 880px; margin: 0 auto; padding: 26px 14px 60px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* PHASE BANNER */
+    .phase-banner {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 18px 22px; margin-bottom: 22px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    }
+    .phase-banner h2 { font-family: 'DM Serif Display', serif; font-size: 21px; font-weight: normal; margin-bottom: 3px; }
+    .phase-banner p { font-size: 12px; color: var(--muted); }
+    .phase-badge {
+      background: rgba(245,197,24,0.09); border: 1px solid rgba(245,197,24,0.22);
+      color: var(--gold); padding: 5px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; font-family: 'DM Mono', monospace; white-space: nowrap;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-family: 'DM Serif Display', serif; font-size: 16px; font-weight: normal;
+      color: var(--gold); margin-bottom: 12px; padding-bottom: 7px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* INFO BOXES */
+    .info-box {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0;
+      padding: 13px 16px; margin-bottom: 16px; font-size: 13px; line-height: 1.7;
+    }
+    .info-box.orange { border-left-color: var(--orange); }
+    .info-box.green { border-left-color: var(--green); }
+    .info-box.blue { border-left-color: var(--blue); }
+    .info-box strong { color: var(--gold); }
+    .info-box.orange strong { color: var(--orange); }
+    .info-box.green strong { color: var(--green); }
+    .info-box.blue strong { color: var(--blue); }
+
+    /* EXAM CARDS */
+    .exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 22px; }
+    .exam-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+    .exam-card .pts { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); }
+    .exam-card .pts-unit { font-size: 11px; color: var(--muted); }
+    .exam-card .sec-name { font-size: 12px; font-weight: 700; color: var(--text); margin: 5px 0 2px; }
+    .exam-card .sec-time { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+    .pass-bar {
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 26px;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .pass-bar-label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .pass-items { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .pass-item { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
+    .pass-item .lbl { font-weight: 400; color: var(--muted); margin-right: 4px; font-family: 'Nunito', sans-serif; font-size: 12px; }
+
+    /* SCHEDULE */
+    .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 26px; }
+    @media (max-width: 580px) { .schedule-grid { grid-template-columns: 1fr; } }
+    .schedule-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .schedule-block.full { grid-column: 1 / -1; }
+    .sblock-header {
+      padding: 9px 15px; font-size: 11.5px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .schedule-block.am .sblock-header { background: rgba(245,197,24,0.07); color: var(--gold); border-bottom: 1px solid rgba(245,197,24,0.13); }
+    .schedule-block.pm .sblock-header { background: rgba(232,115,74,0.07); color: var(--orange); border-bottom: 1px solid rgba(232,115,74,0.13); }
+    .schedule-block.listen .sblock-header { background: rgba(94,234,212,0.07); color: var(--green); border-bottom: 1px solid rgba(94,234,212,0.13); }
+    .schedule-block.blue-block .sblock-header { background: rgba(147,197,253,0.07); color: var(--blue); border-bottom: 1px solid rgba(147,197,253,0.13); }
+    .dur { font-family: 'DM Mono', monospace; font-size: 10px; opacity: 0.65; font-weight: 400; }
+    .sitem {
+      display: flex; gap: 10px; padding: 9px 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .sitem:last-child { border-bottom: none; }
+    .stime { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); min-width: 46px; padding-top: 2px; white-space: nowrap; }
+    .sact-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .sact-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .atag {
+      display: inline-block; background: rgba(147,197,253,0.1);
+      border: 1px solid rgba(147,197,253,0.18); color: var(--blue);
+      font-size: 9px; font-weight: 800; letter-spacing: 0.5px;
+      padding: 1px 6px; border-radius: 8px; margin-left: 5px; vertical-align: middle;
+    }
+
+    /* GRAMMAR CARDS */
+    .grammar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 9px; margin-bottom: 24px; }
+    .gcard { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+    .gcard .wk { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 1px; margin-bottom: 4px; }
+    .gcard .topic { font-size: 12.5px; font-weight: 600; color: var(--text); line-height: 1.45; }
+
+    /* THEME LIST */
+    .theme-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 24px; }
+    .titem { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 13px; display: flex; align-items: center; gap: 10px; }
+    .ticon { font-size: 18px; }
+    .tname { font-size: 12.5px; font-weight: 700; color: var(--text); }
+    .tweeks { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+    /* CURRICULUM TABLE */
+    .curr-wrap { overflow-x: auto; margin-bottom: 28px; }
+    .curr-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .curr-table th { background: var(--bg3); padding: 9px 13px; text-align: left; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .curr-table td { padding: 9px 13px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .curr-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .wk { font-family: 'DM Mono', monospace; color: var(--orange); white-space: nowrap; font-size: 11px; }
+    .pdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+    .p1 { background: var(--gold); }
+    .p2 { background: var(--orange); }
+    .p3 { background: var(--green); }
+    .p4 { background: var(--blue); }
+
+    /* RESOURCES */
+    .res-item {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 13px 15px; margin-bottom: 9px;
+      display: flex; gap: 13px;
+    }
+    .res-icon { font-size: 19px; min-width: 26px; }
+    .res-name { font-size: 13.5px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+    .res-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+    .res-link { display: inline-block; font-size: 11px; color: var(--blue); font-family: 'DM Mono', monospace; margin-top: 4px; text-decoration: none; opacity: 0.8; }
+    .res-link:hover { opacity: 1; text-decoration: underline; }
+
+    /* JSON PROMPTS */
+    .prompt-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 14px; overflow: hidden; }
+    .prompt-header { padding: 8px 14px; background: rgba(147,197,253,0.05); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .prompt-appname { font-size: 11px; font-weight: 800; color: var(--blue); letter-spacing: 1px; }
+    .copy-btn {
+      background: rgba(147,197,253,0.08); border: 1px solid rgba(147,197,253,0.18);
+      color: var(--blue); font-size: 10px; font-family: 'DM Mono', monospace;
+      padding: 3px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(147,197,253,0.16); }
+    .copy-btn.ok { color: var(--green); border-color: var(--green); background: rgba(94,234,212,0.08); }
+    .ptext {
+      padding: 14px 16px; font-family: 'DM Mono', monospace; font-size: 11.5px;
+      color: #aab4cc; line-height: 1.75; white-space: pre-wrap; word-break: break-word;
+    }
+    .ph { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">6-MONTH ROADMAP</div>
+  <h1>telc <span>B1</span> Study Plan</h1>
+  <div class="header-meta">
+    <div class="header-meta-item">📍 Start: <strong>~A1 Level</strong></div>
+    <div class="header-meta-item">🎯 Target: <strong>telc Deutsch B1</strong></div>
+    <div class="header-meta-item">⏱ Daily: <strong>3 hours (split AM + PM)</strong></div>
+    <div class="header-meta-item">📅 Timeline: <strong>26 Weeks</strong></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn active"   onclick="show(this,'exam')">Exam Overview</button>
+    <button class="tab-btn"          onclick="show(this,'p1')"><span class="tab-phase">W 1–8</span>Phase 1</button>
+    <button class="tab-btn"          onclick="show(this,'p2')"><span class="tab-phase">W 9–18</span>Phase 2</button>
+    <button class="tab-btn"          onclick="show(this,'p3')"><span class="tab-phase">W 19–22</span>Phase 3</button>
+    <button class="tab-btn"          onclick="show(this,'p4')"><span class="tab-phase">W 23–26</span>Phase 4</button>
+    <button class="tab-btn"          onclick="show(this,'curr')">Full Curriculum</button>
+    <button class="tab-btn"          onclick="show(this,'res')">Resources & Prompts</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ── EXAM OVERVIEW ── -->
+  <div class="tab-panel active" id="tab-exam">
+
+    <p class="section-title">Written + Oral Structure</p>
+    <div class="exam-grid">
+      <div class="exam-card"><div><span class="pts">75</span><span class="pts-unit"> pts</span></div><div class="sec-name">Leseverstehen</div><div class="sec-time">~60 min</div></div>
+      <div class="exam-card"><div><span class="pts">50</span><span class="pts-unit"> pts</span></div><div class="sec-name">Sprachbausteine</div><div class="sec-time">~30 min</div></div>
+      <div class="exam-card"><div><span class="pts">75</span><span class="pts-unit"> pts</span></div><div class="sec-name">Hörverstehen</div><div class="sec-time">~30 min</div></div>
+      <div class="exam-card"><div><span class="pts">45</span><span class="pts-unit"> pts</span></div><div class="sec-name">Schriftl. Ausdruck</div><div class="sec-time">30 min</div></div>
+      <div class="exam-card"><div><span class="pts">75</span><span class="pts-unit"> pts</span></div><div class="sec-name">Mündl. Prüfung</div><div class="sec-time">~15 min</div></div>
+    </div>
+
+    <div class="pass-bar">
+      <div class="pass-bar-label">To Pass:</div>
+      <div class="pass-items">
+        <div class="pass-item"><span class="lbl">Written</span>135 / 225</div>
+        <div class="pass-item" style="color:var(--muted)">AND</div>
+        <div class="pass-item"><span class="lbl">Oral</span>45 / 75</div>
+        <div class="pass-item" style="color:var(--muted);font-family:'Nunito',sans-serif;font-size:12px;font-weight:400">— each independently ≥ 60%</div>
+      </div>
+    </div>
+
+    <p class="section-title">Section Breakdown</p>
+    <div class="info-box">
+      <strong>Leseverstehen</strong> — 3 parts: (1) Match 5 texts to headlines from a list of 10 · (2) MC comprehension on a longer article · (3) Match 10 people's needs to 12 classified ads
+    </div>
+    <div class="info-box orange">
+      <strong>Sprachbausteine</strong> — 2 parts: (1) Paragraph with 10 blanks, choose from 4 MC options each · (2) 10 blanks, choose from a pool of 15 words (prepositions, connectors, verb forms)
+    </div>
+    <div class="info-box green">
+      <strong>Hörverstehen</strong> — 3 parts: (1) T/F on a radio interview (heard once) · (2) MC on 5 short dialogues · (3) Statement matching on a longer monologue
+    </div>
+    <div class="info-box blue">
+      <strong>Schriftlicher Ausdruck</strong> — Write a semi-formal letter/email (~150–200 words) in exactly 30 min. Must address all 4 given bullet points. Scored on task completion, communicative design, grammatical accuracy.
+    </div>
+    <div class="info-box">
+      <strong>Mündliche Prüfung</strong> — Teil 1: self-introduction (3-4 min) · Teil 2: discuss a topic from a card (5-6 min) · Teil 3: plan something collaboratively (5-6 min)
+    </div>
+
+    <p class="section-title">Your Toolkit — Strength & Gap Map</p>
+    <div class="info-box green">
+      <strong>Strong:</strong> Cases App → Sprachbausteine declension gaps + Writing · Verb App → Sprachbausteine verb forms · Flashcards + Gender/Plural → vocabulary across all sections · QCM App → mirrors Sprachbausteine MC format · Grammar Book → systematic Sprachbausteine + Writing prep
+    </div>
+    <div class="info-box orange">
+      <strong>Gaps covered by this plan:</strong> Hörverstehen (dedicated time slot + methods) · Schriftlicher Ausdruck (daily timed writing in Phase 2–3) · Mündliche Prüfung (time slot + speaking methods in Phase 3) · Authentic B1 reading texts (Nachrichtenleicht, DW B1 — Phase 2+)
+    </div>
+
+  </div>
+
+  <!-- ── PHASE 1 ── -->
+  <div class="tab-panel" id="tab-p1">
+    <div class="phase-banner">
+      <div><h2>Phase 1 — Foundation</h2><p>Core grammar · basic sentence production · 600–800 new words</p></div>
+      <div class="phase-badge">WEEKS 1–8 · A1 → A2</div>
+    </div>
+
+    <p class="section-title">Daily Schedule — 3h/day</p>
+    <div class="schedule-grid">
+
+      <div class="schedule-block am">
+        <div class="sblock-header">☀️ Morning Block <span class="dur">90 min</span></div>
+        <div class="sitem"><div class="stime">00–15</div><div><div class="sact-name">Duolingo</div><div class="sact-detail">Daily habit — speaking &amp; listening base</div></div></div>
+        <div class="sitem"><div class="stime">15–45</div><div><div class="sact-name">Grammar Book <span class="atag">BOOK</span></div><div class="sact-detail">Study 1 new concept from this week's grammar focus</div></div></div>
+        <div class="sitem"><div class="stime">45–65</div><div><div class="sact-name">PWA Drill <span class="atag">PWA</span></div><div class="sact-detail">W1–3: Verb App (Präsens) · W4–5: Cases App (Nom/Acc) · W6–8: both</div></div></div>
+        <div class="sitem"><div class="stime">65–90</div><div><div class="sact-name">Flashcards — New Words <span class="atag">PWA</span></div><div class="sact-detail">Add &amp; drill 15–20 new words from this week's vocabulary theme</div></div></div>
+      </div>
+
+      <div class="schedule-block pm">
+        <div class="sblock-header">🌙 Evening Block <span class="dur">90 min</span></div>
+        <div class="sitem"><div class="stime">00–20</div><div><div class="sact-name">Flashcards — Review <span class="atag">PWA</span></div><div class="sact-detail">Yesterday's set · unlock gender &amp; plural quizzes</div></div></div>
+        <div class="sitem"><div class="stime">20–45</div><div><div class="sact-name">Reading — Authentic Text</div><div class="sact-detail">A2-level (DW Nicos Weg, einfach-deutsch.com) · note unknowns for next flashcard batch</div></div></div>
+        <div class="sitem"><div class="stime">45–65</div><div><div class="sact-name">QCM App <span class="atag">PWA</span></div><div class="sact-detail">Comprehension + grammar check on this week's theme</div></div></div>
+        <div class="sitem"><div class="stime">65–90</div><div><div class="sact-name">Writing Practice</div><div class="sact-detail">Write 5–8 sentences using today's grammar concept. Check with AI.</div></div></div>
+      </div>
+
+      <div class="schedule-block listen full">
+        <div class="sblock-header">🎧 Listening Slot — flexible, any time of day <span class="dur">20–30 min</span></div>
+        <div class="sitem"><div class="stime">–</div><div><div class="sact-name">Suggested for Phase 1</div><div class="sact-detail">DW Nicos Weg (video + exercises, A1–B1, free) · Duolingo Stories (A1–A2) · DW Langsam gesprochen (slow daily news) · YouTube: "Deutsch für Euch" A1 lessons</div></div></div>
+      </div>
+
+    </div>
+
+    <p class="section-title">Grammar — Week by Week (Weeks 1–8)</p>
+    <div class="grammar-grid">
+      <div class="gcard"><div class="wk">WEEK 1</div><div class="topic">Present tense — regular -en verbs · all persons (ich/du/er/wir/ihr/Sie)</div></div>
+      <div class="gcard"><div class="wk">WEEK 2</div><div class="topic">sein · haben · werden + irregular Präsens (fahren, sehen, lesen, sprechen…)</div></div>
+      <div class="gcard"><div class="wk">WEEK 3</div><div class="topic">Modal verbs Präsens: können, müssen, wollen, dürfen, sollen, mögen</div></div>
+      <div class="gcard"><div class="wk">WEEK 4</div><div class="topic">Nominative case — definite &amp; indefinite articles + personal pronouns</div></div>
+      <div class="gcard"><div class="wk">WEEK 5</div><div class="topic">Accusative case — den / einen + direct object pronouns</div></div>
+      <div class="gcard"><div class="wk">WEEK 6</div><div class="topic">Negation (nicht vs kein) + V2 word order + time–manner–place rule</div></div>
+      <div class="gcard"><div class="wk">WEEK 7</div><div class="topic">Noun plurals — 5 main patterns (‑e, ‑er, ‑en/‑n, Umlaut, no change)</div></div>
+      <div class="gcard"><div class="wk">WEEK 8</div><div class="topic">Perfekt intro — haben/sein auxiliary + Partizip II (top 30 common verbs)</div></div>
+    </div>
+
+    <p class="section-title">Vocabulary Themes (Phase 1)</p>
+    <div class="theme-list">
+      <div class="titem"><div class="ticon">👤</div><div><div class="tname">Myself &amp; Family</div><div class="tweeks">W1–W2</div></div></div>
+      <div class="titem"><div class="ticon">🏠</div><div><div class="tname">Home &amp; Routine</div><div class="tweeks">W3–W4</div></div></div>
+      <div class="titem"><div class="ticon">🛒</div><div><div class="tname">Food &amp; Shopping</div><div class="tweeks">W5–W6</div></div></div>
+      <div class="titem"><div class="ticon">🚌</div><div><div class="tname">Transport &amp; Travel</div><div class="tweeks">W7–W8</div></div></div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 2 ── -->
+  <div class="tab-panel" id="tab-p2">
+    <div class="phase-banner">
+      <div><h2>Phase 2 — Core B1 Grammar</h2><p>Dative · prepositions · subordinate clauses · Konjunktiv II · +600 new words</p></div>
+      <div class="phase-badge">WEEKS 9–18 · A2 → B1</div>
+    </div>
+
+    <p class="section-title">Daily Schedule — 3h/day</p>
+    <div class="schedule-grid">
+
+      <div class="schedule-block am">
+        <div class="sblock-header">☀️ Morning Block <span class="dur">90 min</span></div>
+        <div class="sitem"><div class="stime">00–15</div><div><div class="sact-name">Duolingo</div><div class="sact-detail">Daily habit maintenance</div></div></div>
+        <div class="sitem"><div class="stime">15–40</div><div><div class="sact-name">Grammar Book <span class="atag">BOOK</span></div><div class="sact-detail">Study this week's concept (Dative, prepositions, subordinate clauses…)</div></div></div>
+        <div class="sitem"><div class="stime">40–65</div><div><div class="sact-name">Cases App — Dative Focus <span class="atag">PWA</span></div><div class="sact-detail">Generate 20+ Dative-specific JSON entries via AI each week. Mix Nom/Acc/Dat once Dative is solid (W13+).</div></div></div>
+        <div class="sitem"><div class="stime">65–90</div><div><div class="sact-name">Flashcards — New Words <span class="atag">PWA</span></div><div class="sact-detail">15–20 new words from this week's theme</div></div></div>
+      </div>
+
+      <div class="schedule-block pm">
+        <div class="sblock-header">🌙 Evening Block <span class="dur">90 min</span></div>
+        <div class="sitem"><div class="stime">00–15</div><div><div class="sact-name">Flashcards — Review <span class="atag">PWA</span></div><div class="sact-detail">Previous batch + gender/plural quizzes</div></div></div>
+        <div class="sitem"><div class="stime">15–40</div><div><div class="sact-name">Reading — B1 Text</div><div class="sact-detail">Nachrichtenleicht.de or DW B1 — underline unknowns, add to next flashcard batch</div></div></div>
+        <div class="sitem"><div class="stime">40–65</div><div><div class="sact-name">QCM App <span class="atag">PWA</span></div><div class="sact-detail">B1-level questions on current grammar + vocabulary</div></div></div>
+        <div class="sitem"><div class="stime">65–90</div><div><div class="sact-name">Writing — Short Email/Paragraph</div><div class="sact-detail">80–120 words using this week's grammar (Dative verbs, subordinate clauses…). AI check after.</div></div></div>
+      </div>
+
+      <div class="schedule-block listen full">
+        <div class="sblock-header">🎧 Listening Slot <span class="dur">30 min</span></div>
+        <div class="sitem"><div class="stime">–</div><div><div class="sact-name">Suggested for Phase 2</div><div class="sact-detail">Slow German Podcast (transcript available, slowgerman.com) · Easy German YouTube (real dialogues, dual subtitles) · DW Langsam gesprochen · Start sampling official telc Hörverstehen audio for format awareness</div></div></div>
+      </div>
+
+    </div>
+
+    <p class="section-title">Grammar — Week by Week (Weeks 9–18)</p>
+    <div class="grammar-grid">
+      <div class="gcard"><div class="wk">WEEK 9</div><div class="topic">Perfekt — all regular weak verbs (ge-…-t pattern) · full drills</div></div>
+      <div class="gcard"><div class="wk">WEEK 10</div><div class="topic">Perfekt — strong/irregular (ge-…-en) + trennbare &amp; untrennbare Verben</div></div>
+      <div class="gcard"><div class="wk">WEEK 11</div><div class="topic">Dative case — articles (dem/der/dem/den · einem/einer/einem) + indirect objects</div></div>
+      <div class="gcard"><div class="wk">WEEK 12</div><div class="topic">Dative personal pronouns (mir/dir/ihm…) + Dative verbs: helfen, gefallen, gehören, zeigen, geben</div></div>
+      <div class="gcard"><div class="wk">WEEK 13</div><div class="topic">Accusative prepositions: durch, für, gegen, ohne, um</div></div>
+      <div class="gcard"><div class="wk">WEEK 14</div><div class="topic">Dative prepositions: aus, bei, mit, nach, seit, von, zu, gegenüber</div></div>
+      <div class="gcard"><div class="wk">WEEK 15</div><div class="topic">Two-way prepositions (an/auf/in/neben/über/unter/vor/hinter/zwischen) — position (Dat) vs. movement (Acc)</div></div>
+      <div class="gcard"><div class="wk">WEEK 16</div><div class="topic">Subordinate clauses: weil, dass, wenn, ob, obwohl — verb moves to end</div></div>
+      <div class="gcard"><div class="wk">WEEK 17</div><div class="topic">Konjunktiv II: würde + Infinitiv · hätte · wäre · könnte · müsste</div></div>
+      <div class="gcard"><div class="wk">WEEK 18</div><div class="topic">Genitive case + Präteritum of sein, haben, and modal verbs only</div></div>
+    </div>
+
+    <p class="section-title">Vocabulary Themes (Phase 2)</p>
+    <div class="theme-list">
+      <div class="titem"><div class="ticon">🏥</div><div><div class="tname">Health &amp; Body</div><div class="tweeks">W9–W10</div></div></div>
+      <div class="titem"><div class="ticon">💼</div><div><div class="tname">Work &amp; Education</div><div class="tweeks">W11–W12</div></div></div>
+      <div class="titem"><div class="ticon">🎭</div><div><div class="tname">Free Time &amp; Culture</div><div class="tweeks">W13–W14</div></div></div>
+      <div class="titem"><div class="ticon">🌿</div><div><div class="tname">Environment &amp; Nature</div><div class="tweeks">W15–W16</div></div></div>
+      <div class="titem"><div class="ticon">📱</div><div><div class="tname">Technology &amp; Media</div><div class="tweeks">W17–W18</div></div></div>
+    </div>
+  </div>
+
+  <!-- ── PHASE 3 ── -->
+  <div class="tab-panel" id="tab-p3">
+    <div class="phase-banner">
+      <div><h2>Phase 3 — Exam Skills Integration</h2><p>All 5 exam sections drilled in exact telc format · timed · scored</p></div>
+      <div class="phase-badge">WEEKS 19–22 · B1 Readiness</div>
+    </div>
+
+    <div class="info-box orange" style="margin-bottom:20px">
+      <strong>Shift in approach:</strong> No new grammar from week 19. Every session now simulates the actual exam using real telc Übungstest materials (free PDFs — see Resources tab).
+    </div>
+
+    <p class="section-title">Daily Schedule — 3h/day</p>
+    <div class="schedule-grid">
+
+      <div class="schedule-block am">
+        <div class="sblock-header">☀️ Morning Block <span class="dur">90 min</span></div>
+        <div class="sitem"><div class="stime">00–30</div><div><div class="sact-name">Sprachbausteine Drill</div><div class="sact-detail">Gap-fill format from telc Übungstest 1 &amp; 2. Score yourself. Also use QCM App for extra reps. <span class="atag">PWA</span></div></div></div>
+        <div class="sitem"><div class="stime">30–65</div><div><div class="sact-name">Leseverstehen Practice</div><div class="sact-detail">Rotate daily: W19 → Teil 1 · W20 → Teil 2 · W21 → Teil 3 · W22 → full section timed</div></div></div>
+        <div class="sitem"><div class="stime">65–90</div><div><div class="sact-name">Vocabulary Review <span class="atag">PWA</span></div><div class="sact-detail">Flashcards: B1 connectors + authorities vocabulary + exam-frequency words</div></div></div>
+      </div>
+
+      <div class="schedule-block pm">
+        <div class="sblock-header">🌙 Evening Block <span class="dur">90 min</span></div>
+        <div class="sitem"><div class="stime">00–30</div><div><div class="sact-name">Hörverstehen Drill</div><div class="sact-detail">Official telc sample audio (YouTube / Übungstest PDF). Practice T/F and MC format — don't pause the audio.</div></div></div>
+        <div class="sitem"><div class="stime">30–60</div><div><div class="sact-name">Schriftlicher Ausdruck — Timed</div><div class="sact-detail">Set timer to exactly 30 min. Write a full letter addressing all 4 bullet points. Check with AI against telc criteria after.</div></div></div>
+        <div class="sitem"><div class="stime">60–90</div><div><div class="sact-name">Mündliche Prüfung Prep</div><div class="sact-detail">Teil 1: self-intro · Teil 2: topic monologue from card · Teil 3: planning dialogue. Use AI voice or shadowing technique.</div></div></div>
+      </div>
+
+      <div class="schedule-block listen full">
+        <div class="sblock-header">🎧 Listening Slot <span class="dur">30 min</span></div>
+        <div class="sitem"><div class="stime">–</div><div><div class="sact-name">Suggested for Phase 3</div><div class="sact-detail">Search YouTube: "telc Deutsch B1 Hörverstehen" for official sample audio · Practice answering T/F and MC while the audio plays — no pausing · Focus on predicting question types before the recording starts</div></div></div>
+      </div>
+
+    </div>
+
+    <p class="section-title">Vocabulary Themes (Phase 3)</p>
+    <div class="theme-list">
+      <div class="titem"><div class="ticon">🏛️</div><div><div class="tname">Authorities &amp; Bureaucracy</div><div class="tweeks">W19–W20</div></div></div>
+      <div class="titem"><div class="ticon">🔗</div><div><div class="tname">Connectors &amp; Discourse</div><div class="tweeks">W21–W22</div></div></div>
+    </div>
+    <div class="info-box green">
+      <strong>Key connectors to master for writing &amp; speaking:</strong> deshalb · trotzdem · obwohl · allerdings · außerdem · deswegen · damit · sodass · während · nachdem · bevor · seitdem · zwar…aber
+    </div>
+  </div>
+
+  <!-- ── PHASE 4 ── -->
+  <div class="tab-panel" id="tab-p4">
+    <div class="phase-banner">
+      <div><h2>Phase 4 — Mock Exams &amp; Repair</h2><p>Weekly full tests · identify weak sections · targeted drilling · rest before exam</p></div>
+      <div class="phase-badge">WEEKS 23–26 · Final Prep</div>
+    </div>
+
+    <p class="section-title">Weekly Structure</p>
+    <div class="info-box">
+      <strong>Sunday:</strong> Full telc Übungstest — written portion (2.5 hours, timed, no interruptions). Score yourself section by section. Note any section below 60%.
+    </div>
+    <div class="info-box orange">
+      <strong>Monday–Saturday (3h/day):</strong> 1h on weakest section from Sunday · 1h PWA apps on lowest-scoring grammar · 1h writing practice + speaking practice
+    </div>
+    <div class="info-box green">
+      <strong>Week 26 (Final week):</strong> No more mock tests. Light review only — max 1h/day. Prioritize sleep and rest.
+    </div>
+
+    <p class="section-title">Repair Decision Matrix</p>
+    <div class="schedule-grid">
+      <div class="schedule-block am">
+        <div class="sblock-header">Leseverstehen &lt; 60%</div>
+        <div class="sitem"><div class="stime">Fix</div><div><div class="sact-detail">Practice the 3 Teil formats separately with new texts. Train skimming (Teil 1), close reading (Teil 2), scanning (Teil 3). Use Nachrichtenleicht.de daily.</div></div></div>
+      </div>
+      <div class="schedule-block pm">
+        <div class="sblock-header">Sprachbausteine &lt; 60%</div>
+        <div class="sitem"><div class="stime">Fix</div><div><div class="sact-detail">Identify which grammar rule you got wrong. Generate fresh JSON for Cases App + Verb App targeting that rule. 30 min/day intensive drill.</div></div></div>
+      </div>
+      <div class="schedule-block listen">
+        <div class="sblock-header">Schriftl. Ausdruck &lt; 60%</div>
+        <div class="sitem"><div class="stime">Fix</div><div><div class="sact-detail">1 timed letter per day. Ask AI to score it against telc's 3 criteria: task completion · communicative design · grammatical accuracy. Focus on the lowest.</div></div></div>
+      </div>
+      <div class="schedule-block blue-block">
+        <div class="sblock-header">Hörverstehen &lt; 60%</div>
+        <div class="sitem"><div class="stime">Fix</div><div><div class="sact-detail">Daily telc-format audio drills (30 min, no pausing). This is a vocabulary + attention issue more than a pure listening problem — continue vocab review in parallel.</div></div></div>
+      </div>
+    </div>
+
+    <div class="info-box blue" style="margin-top:6px">
+      <strong>Mock test sources:</strong> telc Übungstest 1 (free PDF + audio, link in Resources) · telc Übungstest 2 (search "telc Deutsch B1 Übungstest 2 PDF" on Google) · Use tests in W23, W24, W25. Review W26 only.
+    </div>
+  </div>
+
+  <!-- ── FULL CURRICULUM ── -->
+  <div class="tab-panel" id="tab-curr">
+    <p class="section-title">26-Week Full Curriculum</p>
+    <div class="curr-wrap">
+      <table class="curr-table">
+        <thead><tr><th>Week</th><th>Grammar Focus</th><th>Vocabulary Theme</th><th>Phase</th></tr></thead>
+        <tbody>
+          <tr><td class="wk">W1</td><td>Present tense — regular -en verbs (all persons)</td><td>Myself &amp; Family</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W2</td><td>sein · haben · werden + irregular Präsens</td><td>Myself &amp; Family</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W3</td><td>Modal verbs Präsens (können, müssen, wollen, dürfen, sollen, mögen)</td><td>Home &amp; Routine</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W4</td><td>Nominative case — articles + personal pronouns</td><td>Home &amp; Routine</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W5</td><td>Accusative case — den / einen + direct object pronouns</td><td>Food &amp; Shopping</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W6</td><td>Negation (nicht vs kein) + V2 word order + time–manner–place</td><td>Food &amp; Shopping</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W7</td><td>Noun plurals — 5 patterns + Umlaut changes</td><td>Transport &amp; Travel</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W8</td><td>Perfekt intro — haben/sein + Partizip II (top 30 verbs)</td><td>Transport &amp; Travel</td><td><span class="pdot p1"></span>Foundation</td></tr>
+          <tr><td class="wk">W9</td><td>Perfekt — all regular weak verbs (ge-…-t)</td><td>Health &amp; Body</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W10</td><td>Perfekt — strong/irregular (ge-…-en) + trennbare Verben</td><td>Health &amp; Body</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W11</td><td>Dative case — articles (dem/der/dem/den) + indirect objects</td><td>Work &amp; Education</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W12</td><td>Dative pronouns + Dative verbs (helfen, gefallen, gehören, zeigen…)</td><td>Work &amp; Education</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W13</td><td>Accusative prepositions: durch, für, gegen, ohne, um</td><td>Free Time &amp; Culture</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W14</td><td>Dative prepositions: aus, bei, mit, nach, seit, von, zu, gegenüber</td><td>Free Time &amp; Culture</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W15</td><td>Two-way prepositions — position (Dative) vs. movement (Accusative)</td><td>Environment &amp; Nature</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W16</td><td>Subordinate clauses: weil, dass, wenn, ob, obwohl (verb-final)</td><td>Environment &amp; Nature</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W17</td><td>Konjunktiv II: würde + Inf · hätte · wäre · könnte · müsste</td><td>Technology &amp; Media</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W18</td><td>Genitive case + Präteritum of sein/haben/modals only</td><td>Technology &amp; Media</td><td><span class="pdot p2"></span>B1 Grammar</td></tr>
+          <tr><td class="wk">W19</td><td>Exam format: Sprachbausteine + Leseverstehen Teil 1 &amp; 2</td><td>Authorities &amp; Bureaucracy</td><td><span class="pdot p3"></span>Exam Skills</td></tr>
+          <tr><td class="wk">W20</td><td>Exam format: Leseverstehen Teil 3 + Sprachbausteine Teil 2</td><td>Authorities &amp; Bureaucracy</td><td><span class="pdot p3"></span>Exam Skills</td></tr>
+          <tr><td class="wk">W21</td><td>Exam format: Full Hörverstehen (all 3 parts) + Schriftlicher Ausdruck</td><td>Connectors &amp; Discourse</td><td><span class="pdot p3"></span>Exam Skills</td></tr>
+          <tr><td class="wk">W22</td><td>Full written integration + Mündliche Prüfung structure</td><td>Connectors &amp; Discourse</td><td><span class="pdot p3"></span>Exam Skills</td></tr>
+          <tr><td class="wk">W23</td><td>Mock Test 1 (Sunday) + targeted weak-area repair Mon–Sat</td><td>Review all</td><td><span class="pdot p4"></span>Mock Tests</td></tr>
+          <tr><td class="wk">W24</td><td>Mock Test 2 (Sunday) + targeted weak-area repair Mon–Sat</td><td>Review all</td><td><span class="pdot p4"></span>Mock Tests</td></tr>
+          <tr><td class="wk">W25</td><td>Mock Test 3 (Sunday) + final targeted repair Mon–Sat</td><td>Review all</td><td><span class="pdot p4"></span>Mock Tests</td></tr>
+          <tr><td class="wk">W26</td><td>Light review only — max 1h/day. Rest before exam.</td><td>—</td><td><span class="pdot p4"></span>Final Week</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── RESOURCES & PROMPTS ── -->
+  <div class="tab-panel" id="tab-res">
+
+    <p class="section-title">Listening &amp; Speaking Resources</p>
+
+    <div class="res-item">
+      <div class="res-icon">🎬</div>
+      <div>
+        <div class="res-name">DW Nicos Weg</div>
+        <div class="res-desc">Interactive A1–B1 video series. Free. Covers all telc B1 life topics following one character through Germany. Start here in Phase 1.</div>
+        <a class="res-link" href="https://learngerman.dw.com/de/nicos-weg/s-56100919" target="_blank">learngerman.dw.com → Nicos Weg</a>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-icon">📡</div>
+      <div>
+        <div class="res-name">DW Deutsch — Langsam gesprochen</div>
+        <div class="res-desc">Daily news in slow, clear German. Free. Full transcript provided. Good for Phase 1–2 listening habit.</div>
+        <a class="res-link" href="https://www.dw.com/de/deutsch-lernen/nachrichten/s-8030" target="_blank">dw.com → Langsam gesprochen</a>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-icon">🐢</div>
+      <div>
+        <div class="res-name">Slow German Podcast</div>
+        <div class="res-desc">Short cultural episodes (~8–12 min) at slow-medium speed. Full transcripts on site. Great for Phase 2 — real content, manageable pace.</div>
+        <a class="res-link" href="https://slowgerman.com" target="_blank">slowgerman.com</a>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-icon">🎤</div>
+      <div>
+        <div class="res-name">Easy German YouTube</div>
+        <div class="res-desc">Real street conversations with dual German/English subtitles. Natural pace. Good for Phase 2–3 for both listening modeling and speaking technique.</div>
+        <a class="res-link" href="https://www.youtube.com/@EasyGerman" target="_blank">youtube.com/@EasyGerman</a>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-icon">📰</div>
+      <div>
+        <div class="res-name">Nachrichtenleicht.de</div>
+        <div class="res-desc">Weekly news written at B1 level + audio. Authentic vocabulary, real topics. Perfect for Phase 2+ reading practice. Covers telc B1 themes directly.</div>
+        <a class="res-link" href="https://www.nachrichtenleicht.de" target="_blank">nachrichtenleicht.de</a>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-icon">📋</div>
+      <div>
+        <div class="res-name">telc Übungstest 1 (Official Free PDF)</div>
+        <div class="res-desc">Official practice test with answer key. Essential for Phase 3–4. Contains all written sections + Schriftlicher Ausdruck model.</div>
+        <a class="res-link" href="https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf" target="_blank">Direct PDF Download</a>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-icon">🗣️</div>
+      <div>
+        <div class="res-name">Speaking: Shadowing Technique</div>
+        <div class="res-desc">Pick an Easy German or DW clip → listen once → replay and speak simultaneously, mirroring rhythm and intonation. 10 min/day is sufficient. Best for Mündliche Prüfung fluency.</div>
+      </div>
+    </div>
+    <div class="res-item">
+      <div class="res-icon">🤖</div>
+      <div>
+        <div class="res-name">AI Voice Conversation (Claude / Gemini)</div>
+        <div class="res-desc">For Mündliche Prüfung Teil 2 practice: prompt the AI to act as examiner, give you a topic card, and react to your answers. Use in Phase 3–4.</div>
+      </div>
+    </div>
+
+    <p class="section-title" style="margin-top:28px">JSON Prompt Templates for Your PWA</p>
+    <div class="info-box" style="margin-bottom:18px">
+      Paste these into any AI assistant. Replace the <span style="color:var(--gold);font-family:'DM Mono',monospace">[BRACKETS]</span> with your target topic or grammar, and get clean JSON ready to drop into your app.
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <span class="prompt-appname">FLASHCARDS APP</span>
+        <button class="copy-btn" onclick="copyText(this,'fc')">Copy</button>
+      </div>
+      <pre class="ptext" id="fc">Generate [NUMBER] German vocabulary flashcard entries as a JSON array for the theme [THEME].
+
+Each entry must have exactly these keys:
+- "article": "der" | "die" | "das"
+- "german": the noun in singular form
+- "english": English translation
+- "plural": plural form WITH article (e.g. "die Häuser")
+
+Only include nouns. Return only the JSON array, no extra text or markdown.</pre>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <span class="prompt-appname">VERB CONJUGATION APP</span>
+        <button class="copy-btn" onclick="copyText(this,'verb')">Copy</button>
+      </div>
+      <pre class="ptext" id="verb">Generate [NUMBER] German verb conjugation drill entries as a JSON array.
+
+Tense: [TENSE — e.g. Präsens / Perfekt / Konjunktiv II]
+Verbs to include: [LIST — e.g. gehen, kommen, schreiben, lesen, fahren]
+
+Each entry must have exactly these keys:
+- "verb": the infinitive form
+- "phrase": full sentence with the blank shown as ___
+- "answer": the correct conjugated form that fills the blank
+- "english": full English sentence translation
+
+Return only the JSON array, no extra text or markdown.</pre>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <span class="prompt-appname">CASES APP</span>
+        <button class="copy-btn" onclick="copyText(this,'cases')">Copy</button>
+      </div>
+      <pre class="ptext" id="cases">Generate [NUMBER] German case drill entries as a JSON array.
+
+Focus case: [e.g. Accusative / Dative / mixed Accusative+Dative]
+Include genders: [e.g. Masculine and Neuter / all four]
+
+Each entry must have exactly these keys:
+- "part1": beginning of the sentence (string, end with a space before the blank)
+- "part2": rest of the sentence after the blank
+- "answer": the correct article (e.g. "den" / "dem" / "einer")
+- "case": case name in English (Accusative / Dative / Nominative / Genitive)
+- "gender": noun gender (Masculine / Feminine / Neuter / Plural)
+- "translation": full English sentence
+
+Return only the JSON array, no extra text or markdown.</pre>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <span class="prompt-appname">QCM APP</span>
+        <button class="copy-btn" onclick="copyText(this,'qcm')">Copy</button>
+      </div>
+      <pre class="ptext" id="qcm">Generate [NUMBER] German multiple-choice quiz entries as a JSON array.
+
+Topic / Grammar Focus: [e.g. Dative verbs / Perfekt tense / B1 vocabulary — health theme]
+Difficulty: B1 level
+
+Each entry must have exactly these keys:
+- "german": the German sentence or phrase to evaluate
+- "english": correct English meaning
+- "question": the MC question to ask (e.g. "What does this sentence mean?")
+- "choices": array of exactly 4 strings (correct answer + 3 plausible distractors)
+- "correct": the correct answer (must exactly match one entry in choices)
+
+Return only the JSON array, no extra text or markdown.</pre>
+    </div>
+
+  </div><!-- /tab-res -->
+
+</div><!-- /content -->
+
+<script>
+  function show(btn, id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function copyText(btn, id) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

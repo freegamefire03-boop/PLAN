@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#0e0e14"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <title>telc B1 — 6-Month Interactive Study Plan</title>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+    <h1>telc <span>B1</span> Study Plan</h1>
+  </header>
+
+  <!-- BODY -->
+  <div class="app-body">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- MAIN PANEL -->
+    <main class="main-panel" id="panel-dashboard"></main>
+
+    <!-- PHASE PANELS -->
+    <main class="main-panel hidden" id="panel-p1"></main>
+    <main class="main-panel hidden" id="panel-p2"></main>
+    <main class="main-panel hidden" id="panel-p3"></main>
+    <main class="main-panel hidden" id="panel-p4"></main>
+    <main class="main-panel hidden" id="panel-curr"></main>
+    <main class="main-panel hidden" id="panel-res"></main>
+
+  </div>
+
+  <!-- ZEN MODE OVERLAY -->
+  <div class="zen-overlay" id="zen-overlay">
+    <button class="zen-close" id="zen-close" aria-label="Exit focus mode">✕</button>
+    <div class="zen-content" id="zen-content">
+      <div class="zen-duration" id="zen-duration"></div>
+      <div class="zen-title" id="zen-title"></div>
+      <div class="zen-instruction" id="zen-instruction"></div>
+      <div class="zen-progress-dots" id="zen-dots"></div>
+      <button class="zen-done-btn" id="zen-done-btn">✓ Mark as Done</button>
+      <button class="zen-skip-link" id="zen-skip-link">Skip →</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
