@@ -1091,7 +1091,7 @@ function setArcProgress() {
 
 function renderTimerUI() {
   const arcTime = $('zen-arc-time');
-  const arcPlay = $('zen-arc-play');
+  const arcPlay = $('zen-arc-pause');
   const arcFg = $('zen-arc-fg');
   const arcSvg = $('zen-arc-svg'); // Added arcSvg selection
   if (!arcTime || !arcPlay || !arcSvg) return;
@@ -1373,7 +1373,7 @@ function playChime() {
 // ── TIMER EVENT WIRING ────────────────────────
 
 function setupTimerEvents() {
-  const playBtn = $('zen-arc-play');
+  const playBtn = $('zen-arc-pause');
   const stopBtn = $('zen-arc-stop');
 
   if (playBtn) playBtn.addEventListener('click', toggleTimer);

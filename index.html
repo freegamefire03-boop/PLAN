@@ -44,38 +44,74 @@
 
   </div>
 
-  <!-- ZEN MODE OVERLAY -->
+  <!-- ZEN MODE OVERLAY — new design -->
   <div class="zen-overlay" id="zen-overlay">
     <button class="zen-close" id="zen-close" aria-label="Exit focus mode">✕</button>
     <div class="zen-content" id="zen-content">
+
+      <!-- Decorative book icon -->
+      <div class="zen-deco-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none" stroke="#F5C423" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 8h16v32H8z"/>
+          <path d="M24 8h16v32H24z"/>
+          <path d="M13 14h6" stroke-width="1.2"/>
+          <path d="M13 19h4" stroke-width="1.2"/>
+          <path d="M29 14h6" stroke-width="1.2"/>
+          <path d="M29 19h4" stroke-width="1.2"/>
+          <rect x="19" y="2" width="10" height="12" rx="1" stroke="#44D7B6" transform="rotate(-12, 24, 8)"/>
+          <line x1="22" y1="6" x2="26" y2="6" stroke="#44D7B6" stroke-width="1" transform="rotate(-12, 24, 8)"/>
+          <line x1="22" y1="9" x2="25" y2="9" stroke="#44D7B6" stroke-width="1" transform="rotate(-12, 24, 8)"/>
+        </svg>
+      </div>
+
       <h1 class="zen-title" id="zen-title"></h1>
       <p class="zen-subtitle" id="zen-subtitle"></p>
 
-      <!-- ARC TIMER -->
+      <!-- CENTRAL CARD: arc + timer + controls -->
       <div class="zen-arc-wrap">
-        <button class="zen-arc-btn zen-arc-play" id="zen-arc-play" type="button" aria-label="Play/Pause">
-          <svg class="icon-play" viewBox="0 0 12 12" aria-hidden="true"><polygon points="2,1 11,6 2,11"/></svg>
-          <svg class="icon-pause" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10"/><rect x="7" y="1" width="3" height="10"/></svg>
-        </button>
         <svg class="zen-arc-svg" viewBox="0 0 200 110" id="zen-arc-svg" aria-hidden="true">
           <defs>
             <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#d4a800" />
-              <stop offset="50%" stop-color="#f5c518" />
+              <stop offset="50%" stop-color="#F5C423" />
               <stop offset="100%" stop-color="#ffe066" />
             </linearGradient>
           </defs>
           <path class="arc-bg" d="M 20 100 A 80 80 0 0 1 180 100" />
           <path class="arc-fg" id="zen-arc-fg" d="M 20 100 A 80 80 0 0 1 180 100" />
         </svg>
-        <button class="zen-arc-btn zen-arc-stop" id="zen-arc-stop" type="button" aria-label="Stop">
-          <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="2" width="8" height="8"/></svg>
-        </button>
         <div class="zen-arc-time" id="zen-arc-time">15:00 left</div>
+
+        <!-- Side-by-side controls cutting into card bottom -->
+        <div class="zen-controls">
+          <button class="zen-arc-btn zen-arc-pause" id="zen-arc-pause" type="button" aria-label="Pause">
+            <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>
+          </button>
+          <button class="zen-arc-btn zen-arc-stop" id="zen-arc-stop" type="button" aria-label="Stop">
+            <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="2" width="8" height="8" rx="1"/></svg>
+          </button>
+        </div>
       </div>
 
+      <!-- Done CTA -->
       <button class="zen-done-btn" id="zen-done-btn">✓ Done</button>
-      <a class="zen-skip-link" id="zen-skip-link" href="javascript:void(0)">Skip</a>
+
+      <!-- Bottom dock -->
+      <div class="zen-bottom-dock">
+        <button class="zen-dock-btn" id="zen-dock-settings" aria-label="Settings">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="3"/>
+            <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/>
+          </svg>
+        </button>
+        <a class="zen-skip-link" id="zen-skip-link" href="javascript:void(0)">Skip</a>
+        <span class="zen-dock-sparkle">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z"/>
+          </svg>
+        </span>
+      </div>
+
     </div>
   </div>
 
