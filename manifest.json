@@ -2,7 +2,7 @@
   "name": "telc B1 Study Plan",
   "short_name": "B1 Study",
   "description": "6-month interactive study plan for telc Deutsch B1 — daily tasks, progress tracking, Zen focus mode",
-  "start_url": "/INTERACTIVE%20PLAN/index.html",
+  "start_url": "/PLAN/index.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0e0e14",
