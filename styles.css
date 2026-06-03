@@ -349,7 +349,6 @@ body {
   opacity: 0.45;
   text-decoration: line-through;
   text-decoration-color: var(--gold);
-  pointer-events: none;
 }
 .sitem .check-icon {
   display: inline-block;

@@ -668,7 +668,14 @@ function renderPhase(phaseId) {
       if (e.button !== 0) return;
       const key = this.dataset.key;
       if (!key) return;
-      if (isDone(key)) return;
+      if (isDone(key)) {
+        delete state.done[key];
+        state.lastDate = todayStr();
+        saveState(state);
+        this.classList.remove('done');
+        if (currentView === 'dashboard') renderDashboard();
+        return;
+      }
       state.done[key] = true;
       state.lastDate = todayStr();
       saveState(state);
