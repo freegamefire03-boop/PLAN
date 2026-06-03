@@ -821,15 +821,12 @@ function openZen(phaseId) {
   const content = $('zen-content');
   const doneBtn = $('zen-done-btn');
   const skipBtn = $('zen-skip-link');
-  const dots = $('zen-dots');
-  const duration = $('zen-duration');
   const title = $('zen-title');
-  const instruction = $('zen-instruction');
+  const subtitle = $('zen-subtitle');
+  const phaseObj = PHASES.find(p => p.id === phaseId);
 
   let currentStepIdx = 0;
   let transitionActive = false;
-
-  const total = steps.length;
 
   function findCurrentIdx() {
     for (let i = 0; i < steps.length; i++) {
@@ -846,16 +843,17 @@ function openZen(phaseId) {
     if (!step) { closeZen(); return; }
 
     title.textContent = step.name;
-    instruction.textContent = step.detail;
-
-    // Dots
-    dots.innerHTML = steps.map((s, i) => {
-      const sk = stepKey(phaseId, steps[i].name);
-      let cls = '';
-      if (isDone(sk)) cls = 'done';
-      else if (i === currentStepIdx) cls = 'current';
-      return `<span class="zen-dot ${cls}"></span>`;
-    }).join('');
+    // Subtitle = step detail (or phase fallback) — matches Duolingo "Daily habit — …" style
+    const subText = (step.detail || '').replace(/\s+/g, ' ').trim();
+    if (subText) {
+      subtitle.textContent = subText;
+      subtitle.style.display = '';
+    } else if (phaseObj) {
+      subtitle.textContent = `${phaseObj.label} — ${phaseObj.weeks}`;
+      subtitle.style.display = '';
+    } else {
+      subtitle.style.display = 'none';
+    }
 
     // Initialize / reset timer for this step
     initTimerForStep(step);
@@ -865,7 +863,7 @@ function openZen(phaseId) {
     if (isDone(sk)) {
       doneBtn.textContent = 'Next →';
     } else {
-      doneBtn.textContent = '✓ Mark as Done';
+      doneBtn.textContent = '✓ Done';
     }
   }
 
@@ -879,9 +877,6 @@ function openZen(phaseId) {
 
     if (!wasDone) {
       markDone(sk);
-      const dot = dots.children[currentStepIdx];
-      if (dot) { dot.classList.remove('current'); dot.classList.add('done'); }
-      // burst confetti at the button position
       const rect = doneBtn.getBoundingClientRect();
       celebrate(rect.left + rect.width / 2, rect.top + rect.height / 2, true);
       const allDone = steps.every(s => isDone(stepKey(s.phaseId, s.name)));
@@ -901,7 +896,6 @@ function openZen(phaseId) {
     }
 
     if (nextIdx === -1) {
-      // All done — animate out and return to phase view
       transitionActive = true;
       overlay.classList.add('closing');
       setTimeout(() => {
@@ -911,7 +905,6 @@ function openZen(phaseId) {
       return;
     }
 
-    // Animate transition
     transitionActive = true;
     overlay.classList.add('closing');
     setTimeout(() => {
@@ -1079,71 +1072,56 @@ function loadTimerState() {
   } catch { return null; }
 }
 
-function setZenDuration(text) {
-  const el = $('zen-duration');
+// Arc circumference (half-circle r=80) → 251.33
+const ARC_LENGTH = 251.33;
+
+function setArcTime(text) {
+  const el = $('zen-arc-time');
   if (el) el.textContent = text;
 }
 
+function setArcProgress() {
+  const arcFg = $('zen-arc-fg');
+  if (!arcFg) return;
+  const total = Math.max(1, timer.totalSec || 1);
+  const ratio = Math.max(0, Math.min(1, timer.remainingSec / total));
+  // offset=0 → full arc visible; offset=ARC_LENGTH → empty
+  arcFg.style.strokeDashoffset = String((1 - ratio) * ARC_LENGTH);
+}
+
 function renderTimerUI() {
-  const preEl = $('zen-timer-pre');
-  const activeEl = $('zen-timer-active');
-  const endedEl = $('zen-timer-ended');
-  const doneBtn = $('zen-done-btn');
-  if (!preEl || !activeEl || !endedEl) return;
+  const arcTime = $('zen-arc-time');
+  const arcPlay = $('zen-arc-play');
+  const arcFg = $('zen-arc-fg');
+  const arcSvg = $('zen-arc-svg'); // Added arcSvg selection
+  if (!arcTime || !arcPlay || !arcSvg) return;
+
+  // Reset all state classes
+  arcTime.classList.remove('paused', 'ended');
+  arcFg.classList.remove('ended');
+  arcPlay.classList.remove('running', 'paused'); // Ensure paused class is removed
+  arcSvg.classList.remove('running'); // Added for arc animation
 
   if (timer.ended) {
-    preEl.hidden = true;
-    activeEl.hidden = true;
-    endedEl.hidden = false;
-    setZenDuration('⏰');
-    if (doneBtn) {
-      doneBtn.classList.add('secondary-while-timer');
-      doneBtn.textContent = '✓ Mark as Done';
-    }
+    arcTime.textContent = "Time's up!";
+    arcTime.classList.add('ended');
+    arcFg.classList.add('ended');
+    if (arcFg) arcFg.style.strokeDashoffset = String(ARC_LENGTH);
     return;
   }
 
+  arcTime.textContent = `${formatMMSS(timer.remainingSec)} left`;
+  if (timer.paused) {
+    arcTime.classList.add('paused');
+    arcPlay.classList.add('paused'); // Add paused class to play button
+  }
   if (timer.active) {
-    preEl.hidden = true;
-    activeEl.hidden = false;
-    endedEl.hidden = true;
-    setZenDuration(formatMMSS(timer.remainingSec));
-    const statusEl = $('zen-timer-status');
-    if (statusEl) {
-      statusEl.textContent = timer.paused ? 'Paused' : 'Running';
-      statusEl.classList.toggle('paused', timer.paused);
-    }
-    const pauseBtn = $('timer-pause');
-    if (pauseBtn) pauseBtn.textContent = timer.paused ? '▶ Resume' : '⏸ Pause';
-    if (doneBtn) {
-      doneBtn.classList.add('secondary-while-timer');
-      doneBtn.textContent = '✓ Done';
-    }
-    return;
+    arcPlay.classList.add('running');
+    arcSvg.classList.add('running'); // Add running class to arc svg
   }
 
-  preEl.hidden = false;
-  activeEl.hidden = true;
-  endedEl.hidden = true;
-  setZenDuration(formatMMSS(timer.totalSec));
 
-  const defaultEl = $('zen-timer-default');
-  if (defaultEl) {
-    const dMin = timer.defaultSec / 60;
-    const cMin = timer.totalSec / 60;
-    if (cMin === dMin) {
-      defaultEl.textContent = `Default ${dMin} min`;
-    } else {
-      defaultEl.textContent = `Default ${dMin} · Set ${cMin} min`;
-    }
-  }
-
-  const minusBtn = $('timer-minus');
-  if (minusBtn) minusBtn.disabled = timer.totalSec <= timer.defaultSec;
-  if (doneBtn) {
-    doneBtn.classList.remove('secondary-while-timer');
-    doneBtn.textContent = '✓ Mark as Done';
-  }
+  setArcProgress();
 }
 
 function initTimerForStep(step) {
@@ -1210,10 +1188,6 @@ function resumeTimer() {
 }
 
 function stopTimer() {
-  if (!timer.active && !timer.ended) {
-    // Pre-start stop = nothing to do
-    return;
-  }
   timer.active = false;
   timer.paused = false;
   timer.ended = false;
@@ -1227,27 +1201,20 @@ function stopTimer() {
   renderTimerUI();
 }
 
-function adjustTimer(deltaSec) {
-  if (timer.active) return;
-  const newTotal = timer.totalSec + deltaSec;
-  if (newTotal < timer.defaultSec) return;
-  timer.totalSec = newTotal;
-  timer.remainingSec = newTotal;
-  renderTimerUI();
-}
-
-function snoozeTimer() {
-  if (!timer.active) return;
-  const delta = 5 * 60;
-  timer.remainingSec += delta;
-  if (!timer.paused) {
-    timer.endAt += delta * 1000;
-    scheduleTimerEnd();
-    startTimerInterval();
+function toggleTimer() {
+  if (timer.ended) {
+    // Restart from full duration
+    timer.ended = false;
+    timer.remainingSec = timer.totalSec;
+    startTimer();
+    return;
   }
-  saveTimerState();
-  renderTimerUI();
-  showTimerNotification();
+  if (!timer.active) {
+    startTimer();
+    return;
+  }
+  if (timer.paused) resumeTimer();
+  else pauseTimer();
 }
 
 function startTimerInterval() {
@@ -1258,7 +1225,8 @@ function startTimerInterval() {
     if (!timer.active) return;
     const sec = Math.max(0, Math.round((timer.endAt - Date.now()) / 1000));
     timer.remainingSec = sec;
-    setZenDuration(formatMMSS(sec));
+    setArcTime(`${formatMMSS(sec)} left`);
+    setArcProgress();
     if (sec !== lastNotifSec && sec % 5 === 0) {
       showTimerNotification();
       lastNotifSec = sec;
@@ -1405,22 +1373,11 @@ function playChime() {
 // ── TIMER EVENT WIRING ────────────────────────
 
 function setupTimerEvents() {
-  const minusBtn = $('timer-minus');
-  const plusBtn = $('timer-plus');
-  const startBtn = $('zen-timer-start');
-  const pauseBtn = $('timer-pause');
-  const stopBtn = $('timer-stop');
-  const snoozeBtn = $('timer-snooze');
+  const playBtn = $('zen-arc-play');
+  const stopBtn = $('zen-arc-stop');
 
-  if (minusBtn) minusBtn.addEventListener('click', () => adjustTimer(-5 * 60));
-  if (plusBtn) plusBtn.addEventListener('click', () => adjustTimer(5 * 60));
-  if (startBtn) startBtn.addEventListener('click', startTimer);
-  if (pauseBtn) pauseBtn.addEventListener('click', () => {
-    if (timer.paused) resumeTimer();
-    else pauseTimer();
-  });
+  if (playBtn) playBtn.addEventListener('click', toggleTimer);
   if (stopBtn) stopBtn.addEventListener('click', stopTimer);
-  if (snoozeBtn) snoozeBtn.addEventListener('click', snoozeTimer);
 
   // BroadcastChannel: receive actions from service worker (notification action buttons)
   if (typeof BroadcastChannel !== 'undefined') {
@@ -1479,4 +1436,9 @@ function init() {
   renderDashboard();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+// Check if the DOM is already loaded, otherwise listen for it
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init(); // DOM is already loaded, run init immediately
+}

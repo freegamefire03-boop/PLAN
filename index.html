@@ -48,39 +48,34 @@
   <div class="zen-overlay" id="zen-overlay">
     <button class="zen-close" id="zen-close" aria-label="Exit focus mode">✕</button>
     <div class="zen-content" id="zen-content">
-      <div class="zen-duration" id="zen-duration"></div>
-      <div class="zen-title" id="zen-title"></div>
-      <div class="zen-instruction" id="zen-instruction"></div>
-      <div class="zen-progress-dots" id="zen-dots"></div>
+      <h1 class="zen-title" id="zen-title"></h1>
+      <p class="zen-subtitle" id="zen-subtitle"></p>
 
-      <!-- TIMER SECTION -->
-      <div class="zen-timer" id="zen-timer">
-        <!-- Pre-start state -->
-        <div class="zen-timer-pre" id="zen-timer-pre">
-          <div class="zen-timer-default" id="zen-timer-default">Default 15 min</div>
-          <div class="zen-timer-adjust">
-            <button class="timer-btn" id="timer-minus" type="button" aria-label="Decrease 5 min">− 5 min</button>
-            <button class="timer-btn" id="timer-plus" type="button" aria-label="Increase 5 min">+ 5 min</button>
-          </div>
-          <button class="zen-timer-start" id="zen-timer-start" type="button">⏱ Start Timer</button>
-        </div>
-        <!-- Active (running/paused) state -->
-        <div class="zen-timer-active" id="zen-timer-active" hidden>
-          <div class="zen-timer-status" id="zen-timer-status">Running</div>
-          <button class="timer-btn timer-btn-snooze" id="timer-snooze" type="button" aria-label="Snooze 5 minutes">+ 5 min snooze</button>
-          <div class="zen-timer-controls">
-            <button class="timer-btn timer-btn-primary" id="timer-pause" type="button">⏸ Pause</button>
-            <button class="timer-btn timer-btn-secondary" id="timer-stop" type="button">⏹ Stop</button>
-          </div>
-        </div>
-        <!-- Ended state -->
-        <div class="zen-timer-ended" id="zen-timer-ended" hidden>
-          <div class="zen-timer-ended-label">⏰ Time's up!</div>
-        </div>
+      <!-- ARC TIMER -->
+      <div class="zen-arc-wrap">
+        <button class="zen-arc-btn zen-arc-play" id="zen-arc-play" type="button" aria-label="Play/Pause">
+          <svg class="icon-play" viewBox="0 0 12 12" aria-hidden="true"><polygon points="2,1 11,6 2,11"/></svg>
+          <svg class="icon-pause" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10"/><rect x="7" y="1" width="3" height="10"/></svg>
+        </button>
+        <svg class="zen-arc-svg" viewBox="0 0 200 110" id="zen-arc-svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#d4a800" />
+              <stop offset="50%" stop-color="#f5c518" />
+              <stop offset="100%" stop-color="#ffe066" />
+            </linearGradient>
+          </defs>
+          <path class="arc-bg" d="M 20 100 A 80 80 0 0 1 180 100" />
+          <path class="arc-fg" id="zen-arc-fg" d="M 20 100 A 80 80 0 0 1 180 100" />
+        </svg>
+        <button class="zen-arc-btn zen-arc-stop" id="zen-arc-stop" type="button" aria-label="Stop">
+          <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="2" width="8" height="8"/></svg>
+        </button>
+        <div class="zen-arc-time" id="zen-arc-time">15:00 left</div>
       </div>
 
-      <button class="zen-done-btn" id="zen-done-btn">✓ Mark as Done</button>
-      <button class="zen-skip-link" id="zen-skip-link">Skip →</button>
+      <button class="zen-done-btn" id="zen-done-btn">✓ Done</button>
+      <a class="zen-skip-link" id="zen-skip-link" href="javascript:void(0)">Skip</a>
     </div>
   </div>
 
