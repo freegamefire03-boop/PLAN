@@ -1223,7 +1223,6 @@ function toggleTimer() {
 
 function startTimerInterval() {
   if (timer.intervalId) clearInterval(timer.intervalId);
-  let lastNotifSec = -1;
   timer.intervalId = setInterval(() => {
     if (timer.paused) return;
     if (!timer.active) return;
@@ -1231,10 +1230,7 @@ function startTimerInterval() {
     timer.remainingSec = sec;
     setArcTime(`${formatMMSS(sec)} left`);
     setArcProgress();
-    if (sec !== lastNotifSec && sec % 5 === 0) {
-      showTimerNotification();
-      lastNotifSec = sec;
-    }
+    showTimerNotification();
     if (sec <= 0) {
       onTimerEnd();
     }
