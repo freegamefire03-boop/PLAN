@@ -52,10 +52,48 @@
       <div class="zen-title" id="zen-title"></div>
       <div class="zen-instruction" id="zen-instruction"></div>
       <div class="zen-progress-dots" id="zen-dots"></div>
+
+      <!-- TIMER SECTION -->
+      <div class="zen-timer" id="zen-timer">
+        <!-- Pre-start state -->
+        <div class="zen-timer-pre" id="zen-timer-pre">
+          <div class="zen-timer-default" id="zen-timer-default">Default 15 min</div>
+          <div class="zen-timer-adjust">
+            <button class="timer-btn" id="timer-minus" type="button" aria-label="Decrease 5 min">− 5 min</button>
+            <button class="timer-btn" id="timer-plus" type="button" aria-label="Increase 5 min">+ 5 min</button>
+          </div>
+          <button class="zen-timer-start" id="zen-timer-start" type="button">⏱ Start Timer</button>
+        </div>
+        <!-- Active (running/paused) state -->
+        <div class="zen-timer-active" id="zen-timer-active" hidden>
+          <div class="zen-timer-status" id="zen-timer-status">Running</div>
+          <button class="timer-btn timer-btn-snooze" id="timer-snooze" type="button" aria-label="Snooze 5 minutes">+ 5 min snooze</button>
+          <div class="zen-timer-controls">
+            <button class="timer-btn timer-btn-primary" id="timer-pause" type="button">⏸ Pause</button>
+            <button class="timer-btn timer-btn-secondary" id="timer-stop" type="button">⏹ Stop</button>
+          </div>
+        </div>
+        <!-- Ended state -->
+        <div class="zen-timer-ended" id="zen-timer-ended" hidden>
+          <div class="zen-timer-ended-label">⏰ Time's up!</div>
+        </div>
+      </div>
+
       <button class="zen-done-btn" id="zen-done-btn">✓ Mark as Done</button>
       <button class="zen-skip-link" id="zen-skip-link">Skip →</button>
     </div>
   </div>
+
+  <!-- CELEBRATION CHECK OVERLAY -->
+  <div class="celebration-check" id="celebration-check">
+    <svg viewBox="0 0 100 100">
+      <circle class="check-circle" cx="50" cy="50" r="44" />
+      <path class="check-mark" d="M28 52 L44 68 L74 36" />
+    </svg>
+  </div>
+
+  <!-- CONFETTI CONTAINER (populated dynamically) -->
+  <div class="confetti-host" id="confetti-host"></div>
 
 </div>
 

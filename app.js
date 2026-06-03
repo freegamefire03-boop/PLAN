@@ -31,7 +31,7 @@ const PHASES = [
       listening: {
         label: '🎧 Listening Slot — flexible, any time of day', cls: 'listen', dur: '20–30 min',
         items: [
-          { time: '–', name: 'Listening Slot', detail: 'DW Nicos Weg (video + exercises, A1–B1, free) · Duolingo Stories (A1–A2) · DW Langsam gesprochen (slow daily news) · YouTube: "Deutsch für Euch" A1 lessons', tags: [] }
+          { time: '20–30 min', name: 'Listening Slot', detail: 'DW Nicos Weg (video + exercises, A1–B1, free) · Duolingo Stories (A1–A2) · DW Langsam gesprochen (slow daily news) · YouTube: "Deutsch für Euch" A1 lessons', tags: [] }
         ]
       }
     },
@@ -78,7 +78,7 @@ const PHASES = [
       listening: {
         label: '🎧 Listening Slot', cls: 'listen', dur: '30 min',
         items: [
-          { time: '–', name: 'Listening Slot', detail: 'Slow German Podcast (transcript available, slowgerman.com) · Easy German YouTube (real dialogues, dual subtitles) · DW Langsam gesprochen · Start sampling official telc Hörverstehen audio for format awareness', tags: [] }
+          { time: '30 min', name: 'Listening Slot', detail: 'Slow German Podcast (transcript available, slowgerman.com) · Easy German YouTube (real dialogues, dual subtitles) · DW Langsam gesprochen · Start sampling official telc Hörverstehen audio for format awareness', tags: [] }
         ]
       }
     },
@@ -126,7 +126,7 @@ const PHASES = [
       listening: {
         label: '🎧 Listening Slot', cls: 'listen', dur: '30 min',
         items: [
-          { time: '–', name: 'Listening Slot', detail: 'Search YouTube: "telc Deutsch B1 Hörverstehen" for official sample audio · Practice answering T/F and MC while the audio plays — no pausing · Focus on predicting question types before the recording starts', tags: [] }
+          { time: '30 min', name: 'Listening Slot', detail: 'Search YouTube: "telc Deutsch B1 Hörverstehen" for official sample audio · Practice answering T/F and MC while the audio plays — no pausing · Focus on predicting question types before the recording starts', tags: [] }
         ]
       }
     },
@@ -492,7 +492,7 @@ function renderDashboard() {
 
     <div class="dashboard-layout">
       <div class="progress-column">
-        <div class="progress-card">
+        <div class="progress-card ring-card${pct > 0 ? ' has-progress' : ''}">
           <div class="ring-svg-wrap">
             <svg class="ring-svg" viewBox="0 0 100 100">
               <circle class="ring-bg" cx="50" cy="50" r="46" />
@@ -502,7 +502,8 @@ function renderDashboard() {
           </div>
           <div class="ring-title">Today</div>
         </div>
-        <div class="progress-card streak-card">
+        <div class="progress-card streak-card${streak > 0 ? ' streak-active' : ''}">
+          ${streak > 0 ? '<div class="streak-fire">🔥</div>' : ''}
           <div class="streak-num${streak > 0 ? ' glowing' : ''}">${streak}</div>
           <div class="streak-unit">${streak === 1 ? 'day' : 'days'} streak</div>
         </div>
@@ -510,7 +511,7 @@ function renderDashboard() {
 
       <div class="phase-list">
         ${phases.map(ph => `
-          <div class="phase-list-item" data-view="${ph.id}">
+          <div class="phase-list-item${ph.pct === 100 ? ' complete' : ''}" data-view="${ph.id}">
             <div class="phase-list-icon">${ph.icon}</div>
             <div class="phase-list-info">
               <div class="phase-list-name">${ph.label}</div>
@@ -522,6 +523,7 @@ function renderDashboard() {
               </div>
               <span>${ph.done}/${ph.total}</span>
             </div>
+            <div class="phase-list-arrow">›</div>
           </div>
         `).join('')}
       </div>
@@ -670,7 +672,14 @@ function renderPhase(phaseId) {
       state.done[key] = true;
       state.lastDate = todayStr();
       saveState(state);
-      this.classList.add('done');
+      this.classList.add('done', 'just-done');
+      setTimeout(() => this.classList.remove('just-done'), 800);
+      // burst confetti at the check icon position
+      const icon = this.querySelector('.check-icon');
+      if (icon) {
+        const r = icon.getBoundingClientRect();
+        celebrate(r.left + r.width / 2, r.top + r.height / 2, false);
+      }
       if (currentView === 'dashboard') renderDashboard();
     });
   });
@@ -836,21 +845,20 @@ function openZen(phaseId) {
     const step = steps[currentStepIdx];
     if (!step) { closeZen(); return; }
 
-    // Parse duration from time
-    const dur = step.time || '';
-
-    duration.textContent = dur;
     title.textContent = step.name;
     instruction.textContent = step.detail;
 
     // Dots
     dots.innerHTML = steps.map((s, i) => {
-      const sk = stepKey(phaseId, s.name);
+      const sk = stepKey(phaseId, steps[i].name);
       let cls = '';
       if (isDone(sk)) cls = 'done';
       else if (i === currentStepIdx) cls = 'current';
       return `<span class="zen-dot ${cls}"></span>`;
     }).join('');
+
+    // Initialize / reset timer for this step
+    initTimerForStep(step);
 
     // Update button text
     const sk = stepKey(phaseId, step.name);
@@ -861,15 +869,21 @@ function openZen(phaseId) {
     }
   }
 
-  function advanceStep() {
+  function advanceStep(e) {
     if (transitionActive) return;
+    if (e) spawnRipple(doneBtn, e);
+
     const step = steps[currentStepIdx];
     const sk = stepKey(phaseId, step.name);
+    const wasDone = isDone(sk);
 
-    if (!isDone(sk)) {
+    if (!wasDone) {
       markDone(sk);
       const dot = dots.children[currentStepIdx];
       if (dot) { dot.classList.remove('current'); dot.classList.add('done'); }
+      // burst confetti at the button position
+      const rect = doneBtn.getBoundingClientRect();
+      celebrate(rect.left + rect.width / 2, rect.top + rect.height / 2, true);
       const allDone = steps.every(s => isDone(stepKey(s.phaseId, s.name)));
       if (allDone) {
         state.streak = (state.streak || 0) + 1;
@@ -893,7 +907,7 @@ function openZen(phaseId) {
       setTimeout(() => {
         closeZen();
         renderPhase(phaseId);
-      }, 300);
+      }, 350);
       return;
     }
 
@@ -913,6 +927,13 @@ function openZen(phaseId) {
     state.zenPhase = null;
     saveState(state);
     document.body.style.overflow = '';
+    if (timer.active || timer.ended) {
+      if (timer.intervalId) {
+        clearInterval(timer.intervalId);
+        timer.intervalId = null;
+      }
+      dismissTimerNotification();
+    }
   }
 
   renderZenStep();
@@ -945,6 +966,501 @@ function setupMobileNav() {
   }
 }
 
+// ── CELEBRATION EFFECTS ───────────────────────
+
+const CONFETTI_COLORS = ['#f5c518', '#5eead4', '#93c5fd', '#e8734a', '#ffe066', '#fff'];
+
+function spawnConfetti(x, y, count = 32) {
+  const host = $('confetti-host');
+  if (!host) return;
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const angle = (Math.random() * Math.PI * 2);
+    const dist = 120 + Math.random() * 280;
+    const cx = Math.cos(angle) * dist;
+    const cy = Math.sin(angle) * dist + 180;
+    const cr = (Math.random() * 720 - 360) + 'deg';
+    piece.style.background = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+    piece.style.setProperty('--cx', cx + 'px');
+    piece.style.setProperty('--cy', cy + 'px');
+    piece.style.setProperty('--cr', cr);
+    piece.style.left = x + 'px';
+    piece.style.top = y + 'px';
+    host.appendChild(piece);
+    setTimeout(() => piece.remove(), 1500);
+  }
+}
+
+function showBigCheck() {
+  const check = $('celebration-check');
+  if (!check) return;
+  check.classList.remove('show');
+  void check.offsetWidth;
+  check.classList.add('show');
+  setTimeout(() => check.classList.remove('show'), 1100);
+}
+
+function celebrate(x, y, big = true) {
+  if (x != null && y != null) spawnConfetti(x, y, big ? 38 : 18);
+  if (big) showBigCheck();
+  if (navigator.vibrate) navigator.vibrate(big ? [15, 40, 20] : 12);
+}
+
+function spawnRipple(btn, e) {
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+}
+
+// ── TIMER ENGINE ──────────────────────────────
+
+const TIMER_KEY = 'telc-b1-timer';
+const timer = {
+  active: false,
+  paused: false,
+  ended: false,
+  phaseId: null,
+  stepKey: null,
+  stepName: null,
+  defaultSec: 0,
+  totalSec: 0,
+  remainingSec: 0,
+  startedAt: 0,
+  endAt: 0,
+  intervalId: null,
+  chimePlayed: false
+};
+
+function parseStepDuration(timeStr) {
+  if (!timeStr) return 15;
+  const cleaned = String(timeStr).replace(/[–—]/g, '-').trim();
+  const range = cleaned.match(/^(\d+)\s*-\s*(\d+)/);
+  if (range) {
+    const s = parseInt(range[1], 10);
+    const e = parseInt(range[2], 10);
+    if (!isNaN(s) && !isNaN(e) && e >= s) return Math.max(e - s, 1);
+  }
+  const single = cleaned.match(/(\d+)/);
+  if (single) return parseInt(single[1], 10);
+  return 15;
+}
+
+function formatMMSS(sec) {
+  sec = Math.max(0, Math.round(sec));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function saveTimerState() {
+  try {
+    const snapshot = { ...timer };
+    delete snapshot.intervalId;
+    localStorage.setItem(TIMER_KEY, JSON.stringify(snapshot));
+  } catch {}
+}
+
+function clearTimerStorage() {
+  try { localStorage.removeItem(TIMER_KEY); } catch {}
+}
+
+function loadTimerState() {
+  try {
+    const raw = localStorage.getItem(TIMER_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+function setZenDuration(text) {
+  const el = $('zen-duration');
+  if (el) el.textContent = text;
+}
+
+function renderTimerUI() {
+  const preEl = $('zen-timer-pre');
+  const activeEl = $('zen-timer-active');
+  const endedEl = $('zen-timer-ended');
+  const doneBtn = $('zen-done-btn');
+  if (!preEl || !activeEl || !endedEl) return;
+
+  if (timer.ended) {
+    preEl.hidden = true;
+    activeEl.hidden = true;
+    endedEl.hidden = false;
+    setZenDuration('⏰');
+    if (doneBtn) {
+      doneBtn.classList.add('secondary-while-timer');
+      doneBtn.textContent = '✓ Mark as Done';
+    }
+    return;
+  }
+
+  if (timer.active) {
+    preEl.hidden = true;
+    activeEl.hidden = false;
+    endedEl.hidden = true;
+    setZenDuration(formatMMSS(timer.remainingSec));
+    const statusEl = $('zen-timer-status');
+    if (statusEl) {
+      statusEl.textContent = timer.paused ? 'Paused' : 'Running';
+      statusEl.classList.toggle('paused', timer.paused);
+    }
+    const pauseBtn = $('timer-pause');
+    if (pauseBtn) pauseBtn.textContent = timer.paused ? '▶ Resume' : '⏸ Pause';
+    if (doneBtn) {
+      doneBtn.classList.add('secondary-while-timer');
+      doneBtn.textContent = '✓ Done';
+    }
+    return;
+  }
+
+  preEl.hidden = false;
+  activeEl.hidden = true;
+  endedEl.hidden = true;
+  setZenDuration(formatMMSS(timer.totalSec));
+
+  const defaultEl = $('zen-timer-default');
+  if (defaultEl) {
+    const dMin = timer.defaultSec / 60;
+    const cMin = timer.totalSec / 60;
+    if (cMin === dMin) {
+      defaultEl.textContent = `Default ${dMin} min`;
+    } else {
+      defaultEl.textContent = `Default ${dMin} · Set ${cMin} min`;
+    }
+  }
+
+  const minusBtn = $('timer-minus');
+  if (minusBtn) minusBtn.disabled = timer.totalSec <= timer.defaultSec;
+  if (doneBtn) {
+    doneBtn.classList.remove('secondary-while-timer');
+    doneBtn.textContent = '✓ Mark as Done';
+  }
+}
+
+function initTimerForStep(step) {
+  if (!step) return;
+  const def = parseStepDuration(step.time);
+  timer.active = false;
+  timer.paused = false;
+  timer.ended = false;
+  timer.phaseId = state.zenPhase;
+  timer.stepKey = stepKey(timer.phaseId, step.name);
+  timer.stepName = step.name;
+  timer.defaultSec = def * 60;
+  timer.totalSec = def * 60;
+  timer.remainingSec = def * 60;
+  timer.chimePlayed = false;
+  if (timer.intervalId) {
+    clearInterval(timer.intervalId);
+    timer.intervalId = null;
+  }
+  clearTimerStorage();
+  renderTimerUI();
+}
+
+function startTimer() {
+  if (Notification && Notification.permission === 'default') {
+    try { Notification.requestPermission(); } catch {}
+  }
+  timer.active = true;
+  timer.paused = false;
+  timer.ended = false;
+  timer.remainingSec = timer.totalSec;
+  timer.startedAt = Date.now();
+  timer.endAt = timer.startedAt + timer.totalSec * 1000;
+  timer.chimePlayed = false;
+  saveTimerState();
+  renderTimerUI();
+  startTimerInterval();
+  showTimerNotification();
+  scheduleTimerEnd();
+}
+
+function pauseTimer() {
+  if (!timer.active || timer.paused) return;
+  timer.paused = true;
+  timer.remainingSec = Math.max(0, Math.round((timer.endAt - Date.now()) / 1000));
+  saveTimerState();
+  renderTimerUI();
+  showTimerNotification();
+  if (timer.intervalId) {
+    clearInterval(timer.intervalId);
+    timer.intervalId = null;
+  }
+}
+
+function resumeTimer() {
+  if (!timer.active || !timer.paused) return;
+  timer.paused = false;
+  timer.endAt = Date.now() + timer.remainingSec * 1000;
+  saveTimerState();
+  renderTimerUI();
+  showTimerNotification();
+  scheduleTimerEnd();
+  startTimerInterval();
+}
+
+function stopTimer() {
+  if (!timer.active && !timer.ended) {
+    // Pre-start stop = nothing to do
+    return;
+  }
+  timer.active = false;
+  timer.paused = false;
+  timer.ended = false;
+  timer.remainingSec = timer.totalSec;
+  if (timer.intervalId) {
+    clearInterval(timer.intervalId);
+    timer.intervalId = null;
+  }
+  clearTimerStorage();
+  dismissTimerNotification();
+  renderTimerUI();
+}
+
+function adjustTimer(deltaSec) {
+  if (timer.active) return;
+  const newTotal = timer.totalSec + deltaSec;
+  if (newTotal < timer.defaultSec) return;
+  timer.totalSec = newTotal;
+  timer.remainingSec = newTotal;
+  renderTimerUI();
+}
+
+function snoozeTimer() {
+  if (!timer.active) return;
+  const delta = 5 * 60;
+  timer.remainingSec += delta;
+  if (!timer.paused) {
+    timer.endAt += delta * 1000;
+    scheduleTimerEnd();
+    startTimerInterval();
+  }
+  saveTimerState();
+  renderTimerUI();
+  showTimerNotification();
+}
+
+function startTimerInterval() {
+  if (timer.intervalId) clearInterval(timer.intervalId);
+  let lastNotifSec = -1;
+  timer.intervalId = setInterval(() => {
+    if (timer.paused) return;
+    if (!timer.active) return;
+    const sec = Math.max(0, Math.round((timer.endAt - Date.now()) / 1000));
+    timer.remainingSec = sec;
+    setZenDuration(formatMMSS(sec));
+    if (sec !== lastNotifSec && sec % 5 === 0) {
+      showTimerNotification();
+      lastNotifSec = sec;
+    }
+    if (sec <= 0) {
+      onTimerEnd();
+    }
+  }, 1000);
+}
+
+function onTimerEnd() {
+  if (timer.ended) return;
+  timer.ended = true;
+  timer.active = false;
+  timer.paused = false;
+  if (timer.intervalId) {
+    clearInterval(timer.intervalId);
+    timer.intervalId = null;
+  }
+  saveTimerState();
+  playChime();
+  if (!timer.chimePlayed) {
+    timer.chimePlayed = true;
+    celebrate(window.innerWidth / 2, window.innerHeight / 2, true);
+  }
+  renderTimerUI();
+  showTimerEndedNotification();
+}
+
+function showTimerNotification() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!('serviceWorker' in navigator)) return;
+  const title = `telc B1 — ${timer.stepName || 'Timer'}`;
+  const opts = {
+    body: timer.paused
+      ? `⏸ Paused at ${formatMMSS(timer.remainingSec)}`
+      : `⏱ ${formatMMSS(timer.remainingSec)} remaining`,
+    tag: `telc-timer-${timer.stepKey}`,
+    requireInteraction: true,
+    silent: true,
+    renotify: false,
+    actions: [
+      { action: timer.paused ? 'resume' : 'pause', title: timer.paused ? '▶ Resume' : '⏸ Pause' },
+      { action: 'stop', title: '⏹ Stop' }
+    ]
+  };
+  navigator.serviceWorker.ready.then(reg => {
+    reg.showNotification(title, opts).catch(() => {});
+  });
+}
+
+function showTimerEndedNotification() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  if (!('serviceWorker' in navigator)) return;
+  const title = `telc B1 — Time's up!`;
+  const opts = {
+    body: `${timer.stepName || 'Timer'} complete`,
+    tag: `telc-timer-ended-${timer.stepKey}`,
+    requireInteraction: false,
+    silent: false,
+    actions: []
+  };
+  navigator.serviceWorker.ready.then(reg => {
+    reg.showNotification(title, opts).catch(() => {});
+    setTimeout(() => {
+      reg.getNotifications({ tag: `telc-timer-${timer.stepKey}` }).then(ns => {
+        ns.forEach(n => n.close());
+      });
+    }, 200);
+  });
+}
+
+function dismissTimerNotification() {
+  if (!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.ready.then(reg => {
+    reg.getNotifications({ tag: `telc-timer-${timer.stepKey}` }).then(ns => {
+      ns.forEach(n => n.close());
+    });
+    reg.getNotifications({ tag: `telc-timer-ended-${timer.stepKey}` }).then(ns => {
+      ns.forEach(n => n.close());
+    });
+  });
+}
+
+function scheduleTimerEnd() {
+  if (!('serviceWorker' in navigator)) return;
+  if (!timer.endAt) return;
+  navigator.serviceWorker.ready.then(reg => {
+    try {
+      if (typeof TimestampTrigger !== 'undefined' && reg.showNotification) {
+        // Use the same tag, so it replaces the persistent one when it fires
+        const opts = {
+          body: `⏰ ${timer.stepName || 'Timer'} — Time's up!`,
+          tag: `telc-timer-${timer.stepKey}`,
+          showTrigger: new TimestampTrigger(timer.endAt),
+          requireInteraction: false,
+          silent: false,
+          actions: []
+        };
+        reg.showNotification(`telc B1 — Time's up!`, opts).catch(() => {});
+      }
+    } catch {}
+  });
+}
+
+// ── WEB AUDIO CHIME ───────────────────────────
+
+let audioCtx = null;
+function getAudioCtx() {
+  if (audioCtx) return audioCtx;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return null;
+  audioCtx = new AC();
+  return audioCtx;
+}
+
+function playChime() {
+  try {
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+    const notes = [
+      { freq: 523.25, start: 0.00, dur: 0.45 }, // C5
+      { freq: 659.25, start: 0.18, dur: 0.45 }, // E5
+      { freq: 783.99, start: 0.36, dur: 0.70 }  // G5
+    ];
+    notes.forEach(({ freq, start, dur }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0, now + start);
+      gain.gain.linearRampToValueAtTime(0.22, now + start + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + start + dur);
+      osc.start(now + start);
+      osc.stop(now + start + dur + 0.05);
+    });
+  } catch {}
+}
+
+// ── TIMER EVENT WIRING ────────────────────────
+
+function setupTimerEvents() {
+  const minusBtn = $('timer-minus');
+  const plusBtn = $('timer-plus');
+  const startBtn = $('zen-timer-start');
+  const pauseBtn = $('timer-pause');
+  const stopBtn = $('timer-stop');
+  const snoozeBtn = $('timer-snooze');
+
+  if (minusBtn) minusBtn.addEventListener('click', () => adjustTimer(-5 * 60));
+  if (plusBtn) plusBtn.addEventListener('click', () => adjustTimer(5 * 60));
+  if (startBtn) startBtn.addEventListener('click', startTimer);
+  if (pauseBtn) pauseBtn.addEventListener('click', () => {
+    if (timer.paused) resumeTimer();
+    else pauseTimer();
+  });
+  if (stopBtn) stopBtn.addEventListener('click', stopTimer);
+  if (snoozeBtn) snoozeBtn.addEventListener('click', snoozeTimer);
+
+  // BroadcastChannel: receive actions from service worker (notification action buttons)
+  if (typeof BroadcastChannel !== 'undefined') {
+    const ch = new BroadcastChannel('telc-timer');
+    ch.onmessage = e => {
+      const t = e.data && e.data.type;
+      if (t === 'pause') pauseTimer();
+      else if (t === 'resume') resumeTimer();
+      else if (t === 'stop') stopTimer();
+    };
+  }
+
+  // Sync when app comes back to foreground
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      syncTimerOnResume();
+    }
+  });
+}
+
+function syncTimerOnResume() {
+  if (!timer.active && !timer.ended) return;
+  if (timer.paused) {
+    renderTimerUI();
+    showTimerNotification();
+    return;
+  }
+  if (timer.active) {
+    const sec = Math.max(0, Math.round((timer.endAt - Date.now()) / 1000));
+    timer.remainingSec = sec;
+    if (sec <= 0) {
+      onTimerEnd();
+    } else {
+      renderTimerUI();
+      showTimerNotification();
+      startTimerInterval();
+    }
+  }
+}
+
 // ── PWA REGISTRATION ──────────────────────────
 
 function registerSW() {
@@ -957,6 +1473,7 @@ function registerSW() {
 
 function init() {
   setupMobileNav();
+  setupTimerEvents();
   registerSW();
   renderNav();
   renderDashboard();
