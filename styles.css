@@ -635,7 +635,7 @@ body {
 .zen-overlay {
   position: fixed;
   inset: 0;
-  background: #121214;
+  background: #12141f;
   z-index: 1000;
   display: none;
   flex-direction: column;
@@ -689,18 +689,6 @@ body {
   gap: clamp(14px, 3vh, 22px);
 }
 
-/* ── DECORATIVE BOOK ICON ── */
-.zen-deco-icon {
-  width: 48px;
-  height: 48px;
-  margin-bottom: -4px;
-}
-.zen-deco-icon svg {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 0 12px rgba(245, 196, 35, 0.35));
-}
-
 /* ── TITLE: large serif gold ── */
 .zen-title {
   font-family: 'DM Serif Display', serif;
@@ -732,7 +720,7 @@ body {
   max-width: 300px;
   margin: 2px auto 0;
   padding: 24px 28px 28px;
-  background: linear-gradient(165deg, #1c1c26 0%, #14141c 100%);
+  background: linear-gradient(165deg, #1a1a2e 0%, #12141f 100%);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
   display: flex;
@@ -753,7 +741,7 @@ body {
 }
 .arc-bg {
   fill: none;
-  stroke: #2a2a36;
+  stroke: #1e2035;
   stroke-width: 2.8;
   stroke-linecap: round;
 }
@@ -775,14 +763,16 @@ body {
 /* Timer text — monospace digital clock below arc peak */
 .zen-arc-time {
   font-family: 'DM Mono', monospace;
-  font-size: 14px;
-  color: var(--muted);
-  letter-spacing: 1px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #F5C423;
+  letter-spacing: 2px;
   text-align: center;
   white-space: nowrap;
   pointer-events: none;
   margin-top: -4px;
   margin-bottom: 6px;
+  text-shadow: 0 0 14px rgba(245, 196, 35, 0.55), 0 0 30px rgba(245, 196, 35, 0.25);
   transition: color 0.3s ease;
 }
 .zen-arc-time.ended {
@@ -803,22 +793,22 @@ body {
   50%      { opacity: 1; }
 }
 
-/* ── SIDE-BY-SIDE CONTROLS ── */
+/* ── SIDE-BY-SIDE CONTROLS — below card, outside arc-wrap ── */
 .zen-controls {
   display: flex;
-  gap: 20px;
+  gap: 14px;
   align-items: center;
   justify-content: center;
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 /* Circular control buttons */
 .zen-arc-btn {
-  width: 52px;
-  height: 52px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: #1e1e2a;
-  border: 1.5px solid #2a2a36;
+  background: #1a1a2e;
+  border: 1.5px solid #2a2a40;
   color: var(--muted);
   display: flex;
   align-items: center;
@@ -826,6 +816,11 @@ body {
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.zen-arc-stop {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 6px !important;
 }
 .zen-arc-btn:hover {
   transform: translateY(-2px) scale(1.05);
@@ -837,6 +832,13 @@ body {
   fill: currentColor;
   display: block;
 }
+
+/* Play icon shown by default, pause hidden */
+.zen-arc-pause .icon-play { display: block; }
+.zen-arc-pause .icon-pause { display: none; }
+/* When running: show pause, hide play */
+.zen-arc-pause.running .icon-play { display: none; }
+.zen-arc-pause.running .icon-pause { display: block; }
 
 /* Pause button — cyan glow when running */
 .zen-arc-pause.running {
@@ -866,10 +868,7 @@ body {
   50%      { box-shadow: 0 0 28px rgba(68, 215, 182, 0.8), 0 4px 16px rgba(0,0,0,0.4); }
 }
 
-/* Stop button — gold glow */
-.zen-arc-stop {
-  box-shadow: 0 0 8px rgba(245, 196, 35, 0.15), 0 4px 16px rgba(0,0,0,0.4);
-}
+/* Stop button — gold glow on hover */
 .zen-arc-stop:hover {
   color: #F5C423;
   border-color: rgba(245, 196, 35, 0.5);
@@ -918,7 +917,7 @@ body {
   width: 100%;
   max-width: 300px;
   padding: 10px 16px;
-  background: rgba(18, 18, 20, 0.85);
+  background: rgba(18, 20, 31, 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-radius: 12px;

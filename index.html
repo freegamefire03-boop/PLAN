@@ -49,25 +49,10 @@
     <button class="zen-close" id="zen-close" aria-label="Exit focus mode">✕</button>
     <div class="zen-content" id="zen-content">
 
-      <!-- Decorative book icon -->
-      <div class="zen-deco-icon" aria-hidden="true">
-        <svg viewBox="0 0 48 48" fill="none" stroke="#F5C423" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M8 8h16v32H8z"/>
-          <path d="M24 8h16v32H24z"/>
-          <path d="M13 14h6" stroke-width="1.2"/>
-          <path d="M13 19h4" stroke-width="1.2"/>
-          <path d="M29 14h6" stroke-width="1.2"/>
-          <path d="M29 19h4" stroke-width="1.2"/>
-          <rect x="19" y="2" width="10" height="12" rx="1" stroke="#44D7B6" transform="rotate(-12, 24, 8)"/>
-          <line x1="22" y1="6" x2="26" y2="6" stroke="#44D7B6" stroke-width="1" transform="rotate(-12, 24, 8)"/>
-          <line x1="22" y1="9" x2="25" y2="9" stroke="#44D7B6" stroke-width="1" transform="rotate(-12, 24, 8)"/>
-        </svg>
-      </div>
-
       <h1 class="zen-title" id="zen-title"></h1>
       <p class="zen-subtitle" id="zen-subtitle"></p>
 
-      <!-- CENTRAL CARD: arc + timer + controls -->
+      <!-- CENTRAL CARD: arc + timer -->
       <div class="zen-arc-wrap">
         <svg class="zen-arc-svg" viewBox="0 0 200 110" id="zen-arc-svg" aria-hidden="true">
           <defs>
@@ -81,16 +66,17 @@
           <path class="arc-fg" id="zen-arc-fg" d="M 20 100 A 80 80 0 0 1 180 100" />
         </svg>
         <div class="zen-arc-time" id="zen-arc-time">15:00 left</div>
+      </div>
 
-        <!-- Side-by-side controls cutting into card bottom -->
-        <div class="zen-controls">
-          <button class="zen-arc-btn zen-arc-pause" id="zen-arc-pause" type="button" aria-label="Pause">
-            <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>
-          </button>
-          <button class="zen-arc-btn zen-arc-stop" id="zen-arc-stop" type="button" aria-label="Stop">
-            <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="2" width="8" height="8" rx="1"/></svg>
-          </button>
-        </div>
+      <!-- Controls — below card -->
+      <div class="zen-controls">
+        <button class="zen-arc-btn zen-arc-pause" id="zen-arc-pause" type="button" aria-label="Pause">
+          <svg class="icon-play" viewBox="0 0 12 12" aria-hidden="true"><polygon points="2,1 11,6 2,11"/></svg>
+          <svg class="icon-pause" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>
+        </button>
+        <button class="zen-arc-btn zen-arc-stop" id="zen-arc-stop" type="button" aria-label="Stop">
+          <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="2" width="8" height="8" rx="1"/></svg>
+        </button>
       </div>
 
       <!-- Done CTA -->
