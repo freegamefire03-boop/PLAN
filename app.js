@@ -1085,28 +1085,34 @@ function setArcProgress() {
   if (!arcFg) return;
   const total = Math.max(1, timer.totalSec || 1);
   const ratio = Math.max(0, Math.min(1, timer.remainingSec / total));
-  // offset=0 → full arc visible; offset=ARC_LENGTH → empty
-  arcFg.style.strokeDashoffset = String((1 - ratio) * ARC_LENGTH);
+  // offset=ARC_LENGTH → empty (full time); offset=0 → full (time's up)
+  arcFg.style.strokeDashoffset = String(ratio * ARC_LENGTH);
+  // Progressive glow: blur 2px→20px, opacity 0→0.75
+  const fill = 1 - ratio; // 0 = empty, 1 = fully filled
+  const blur = 2 + fill * 18;
+  const alpha = fill * 0.75;
+  arcFg.style.filter = `drop-shadow(0 0 ${blur}px rgba(245, 196, 35, ${alpha}))`;
 }
 
 function renderTimerUI() {
   const arcTime = $('zen-arc-time');
   const arcPlay = $('zen-arc-pause');
   const arcFg = $('zen-arc-fg');
-  const arcSvg = $('zen-arc-svg'); // Added arcSvg selection
-  if (!arcTime || !arcPlay || !arcSvg) return;
+  if (!arcTime || !arcPlay) return;
 
   // Reset all state classes
   arcTime.classList.remove('paused', 'ended');
   arcFg.classList.remove('ended');
-  arcPlay.classList.remove('running', 'paused'); // Ensure paused class is removed
-  arcSvg.classList.remove('running'); // Added for arc animation
+  arcPlay.classList.remove('running', 'paused');
 
   if (timer.ended) {
     arcTime.textContent = "Time's up!";
     arcTime.classList.add('ended');
     arcFg.classList.add('ended');
-    if (arcFg) arcFg.style.strokeDashoffset = String(ARC_LENGTH);
+    if (arcFg) {
+      arcFg.style.strokeDashoffset = '0';
+      arcFg.style.filter = 'drop-shadow(0 0 20px rgba(245, 196, 35, 0.75))';
+    }
     return;
   }
 
@@ -1117,9 +1123,7 @@ function renderTimerUI() {
   }
   if (timer.active) {
     arcPlay.classList.add('running');
-    arcSvg.classList.add('running'); // Add running class to arc svg
   }
-
 
   setArcProgress();
 }
